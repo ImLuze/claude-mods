@@ -1,1 +1,1 @@
-{ "name": "skill-list", "version": "0.1.0", "description": "Lists skills invoked since the last prompt, above the prompt", "types": "./types/index.d.ts" }
+{ "name": "skill-list", "description": "Lists skills invoked since the last prompt, above the prompt", "types": "./types/index.d.ts" }
