@@ -1,0 +1,1 @@
+{ "name": "my-prs", "version": "0.2.0", "description": "Shows your open pull requests on this repo that need action, above the prompt", "types": "./types/index.d.ts" }

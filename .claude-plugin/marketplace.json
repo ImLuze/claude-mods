@@ -1,5 +1,8 @@
 {
   "name": "claude-mods",
   "owner": { "name": "ImLuze" },
-  "plugins": [{ "name": "skill-list", "source": "./skill-list" }]
+  "plugins": [
+    { "name": "skill-list", "source": "./skill-list" },
+    { "name": "my-prs", "source": "./my-prs" }
+  ]
 }
