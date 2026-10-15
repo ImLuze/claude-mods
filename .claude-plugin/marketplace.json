@@ -1,0 +1,5 @@
+{
+  "name": "claude-mods",
+  "owner": { "name": "ImLuze" },
+  "plugins": [{ "name": "skill-list", "source": "./skill-list" }]
+}
