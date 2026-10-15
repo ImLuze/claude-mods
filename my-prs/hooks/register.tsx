@@ -17,6 +17,12 @@ type PullRequest = {
 const FIELDS = 'number,title,url,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup'
 const FAILED = ['FAILURE', 'ERROR', 'TIMED_OUT', 'CANCELLED', 'ACTION_REQUIRED', 'STARTUP_FAILURE']
 const REFRESH_MS = 60 * 60 * 1000
+const COLORS: Record<string, string> = {
+  'CI failed': 'error',
+  'changes requested': 'warning',
+  conflicts: 'error',
+  mergeable: 'success',
+}
 
 const prs = atom({ plugin: 'my-prs', key: 'prs' } as const, [])
 
@@ -45,7 +51,7 @@ const refresh = async ($: EngineInterface) => {
   return undefined
 }
 
-const line = (pr: PullRequestAction) => `#${pr.number} ${pr.title} [${pr.actions.join(', ')}]`
+const name = (pr: PullRequestAction) => `#${pr.number} ${pr.title}`
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
@@ -70,7 +76,7 @@ export const register: Register = on => {
 
     return {
       text: list.length > 0
-        ? list.map(pr => `${line(pr)}\n  ${pr.url}`).join('\n')
+        ? list.map(pr => `${name(pr)} [${pr.actions.join(', ')}]\n  ${pr.url}`).join('\n')
         : 'No open pull requests need action.',
     }
   })
@@ -82,12 +88,19 @@ export const register: Register = on => {
       return next(e)
     }
 
-    const { Box, Text } = $.ui.resolve(e)
+    const { Box, Link, Text } = $.ui.resolve(e)
 
     return (
       <Box flexDirection="column">
         {list.slice(0, e.props.maxRows).map(pr => (
-          <Text dimColor>PR {line(pr)}</Text>
+          <Text>
+            <Link href={pr.url}>{name(pr)}</Link> [
+            {pr.actions.flatMap((action, i) => [
+              i > 0 ? ', ' : '',
+              <Text color={COLORS[action]}>{action}</Text>,
+            ])}
+            ]
+          </Text>
         ))}
       </Box>
     )

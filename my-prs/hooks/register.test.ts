@@ -47,7 +47,11 @@ test('lists pull requests that need action, in the command and above the prompt'
 
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ plugin: 'my-prs', surface, ...BAND })
-    expect((await ui.find({ type: 'Text', text: /#2/ }))?.text).toBe('PR #2 PR 2 [changes requested, conflicts]')
+    expect((await ui.find({ type: 'Text', text: /#2/ }))?.text).toMatch(/#2 PR 2 \[changes requested, conflicts\]$/)
+    expect((await ui.find({ type: 'Link', text: /#2 PR 2$/ }))?.props.href).toBe('https://github.com/o/r/pull/2')
+    expect((await ui.find({ type: 'Text', text: /^conflicts$/ }))?.props.color).toBe('error')
+    expect((await ui.find({ type: 'Text', text: /^changes requested$/ }))?.props.color).toBe('warning')
+    expect((await ui.find({ type: 'Text', text: /^mergeable$/ }))?.props.color).toBe('success')
     expect(await ui.find({ type: 'Text', text: /#5/ })).toBeUndefined()
     await ui.unmount()
   }
